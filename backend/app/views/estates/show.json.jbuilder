@@ -1,0 +1,1 @@
+json.extract! @estate, :id, :name, :address, :city, :state, :zip, :latitude, :longitude, :created_at, :updated_at

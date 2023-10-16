@@ -1,0 +1,18 @@
+\default: &default
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
+  username: greg
+  password: greg
+  host:  localhost
+development:
+  <<: *default
+  database: recipes_development
+
+test:
+  <<: *default
+  database: recipes_test
+
+production:
+  <<: *default
+  database: recipes_production
