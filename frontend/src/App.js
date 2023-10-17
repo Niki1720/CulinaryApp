@@ -4,6 +4,8 @@ import IngredientsPage from "./components/ingredients/IngredientsList";
 import Navigation from './components/Navigation';
 import './App.scss'
 import Ingredient from "./components/ingredients/IngredientForm";
+import RecipeTypesPage from "./components/categories/RecipeTypesList";
+import RecipeType from "./components/categories/RecipeTypeForm";
 
 const App = () => {
   return (
@@ -14,8 +16,9 @@ const App = () => {
           <div className="list">
           <Routes>
             <Route path="/ingredients" element={<IngredientsPage />} />
-            <Route path="/ingredients/:id" element={<Ingredient />} />
-            {/*<Route path="/categories" element={<CategoriesPage />} />*/}
+            <Route path="/ingredients/:id?" element={<Ingredient />} />
+            <Route path="/recipe_types" element={<RecipeTypesPage />} />
+            <Route path="/recipe_types/:id?" element={<RecipeType />} />
             {/*<Route path="/tags" element={<TagsPage />} />*/}
             {/*<Route path="/" element={<HomePage />} />*/}
           </Routes>

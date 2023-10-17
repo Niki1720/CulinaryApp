@@ -1,39 +1,39 @@
 import React, { useEffect, useState, useMemo } from "react";
-import * as actions from './IngredientsActions';
+import * as actions from './RecipeTypesActions';
 import { Button, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { useTable } from 'react-table';
-import Ingredient from "./IngredientForm";
+import RecipeType from "./RecipeTypeForm";
 import {useNavigate} from "react-router-dom";
 
-const IngredientsPage = () => {
-  const [ingredients, setIngredients] = useState([]);
-  const [editingIngredientId, setEditingIngredientId] = useState(null);
+const RecipeTypesPage = () => {
+  const [recipeType, setRecipeType] = useState([]);
+  const [editingRecipeTypeId, setEditingRecipeTypeId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    actions.loadIngredients(setIngredients);
+    actions.loadRecipeTypes(setRecipeType);
   }, []);
 
-  const handleEditIngredient = (id) => {
-    setEditingIngredientId(id);
-    navigate(`/ingredients/${id}`);
+  const handleEditRecipeType = (id) => {
+    setEditingRecipeTypeId(id);
+    navigate(`/recipe_types/${id}`);
   };
 
-  const handleAddIngredient = () => {
-    setEditingIngredientId(null);
-    navigate(`/ingredients/new`);
+  const handleAddRecipeType = () => {
+    setEditingRecipeTypeId("new");
+    navigate(`/recipe_types/new`);
   };
 
-  const handleIngredientDelete = (id) => {
-    actions.deleteIngredient(id, () => {
-      actions.loadIngredients(setIngredients);
+  const handleRecipeTypeDelete = (id) => {
+    actions.deleteRecipeType(id, () => {
+      actions.loadRecipeTypes(setRecipeType);
     });
   };
 
   const columns = useMemo(() => [
     {
-      Header: 'Ingredients',
+      Header: 'Categories',
       accessor: 'name',
     },
     {
@@ -42,20 +42,20 @@ const IngredientsPage = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddIngredient}
+            onClick={handleAddRecipeType}
             startIcon={<Add />}
           >
-            Add Ingredient
+            Add Category
           </Button>
         </div>
       ),
       accessor: 'id',
       Cell: ({ value }) => (
         <div>
-          <Button onClick={() => handleEditIngredient(value)} startIcon={<Edit />}>
+          <Button onClick={() => handleEditRecipeType(value)} startIcon={<Edit />}>
             Edytuj
           </Button>
-          <Button onClick={() => handleIngredientDelete(value)} startIcon={<Delete />}>
+          <Button onClick={() => handleRecipeTypeDelete(value)} startIcon={<Delete />}>
             Usuń
           </Button>
         </div>
@@ -71,13 +71,13 @@ const IngredientsPage = () => {
     prepareRow,
   } = useTable({
     columns,
-    data: ingredients,
+    data: recipeType,
   });
 
   return (
     <div className="records">
-      {editingIngredientId !== null ? (
-        <Ingredient ingredientId={editingIngredientId} />
+      {editingRecipeTypeId !== null ? (
+        <RecipeType recipeTypeId={editingRecipeTypeId} />
       ) : null}
       <TableContainer component={Paper}>
         <Table {...getTableProps()}>
@@ -110,4 +110,4 @@ const IngredientsPage = () => {
   );
 };
 
-export default IngredientsPage;
+export default RecipeTypesPage;

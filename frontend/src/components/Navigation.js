@@ -20,7 +20,7 @@ const Navigation = () => {
               <NavLink to="/ingredients">Ingredients</NavLink>
             </li>
             <li>
-              <NavLink to="/categories">Categories</NavLink>
+              <NavLink to="/recipe_types">Categories</NavLink>
             </li>
             <li>
               <NavLink to="/tags">Tags</NavLink>

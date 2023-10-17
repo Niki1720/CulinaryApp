@@ -18,17 +18,19 @@ export const getIngredient = (id, callback) => {
     );
 };
 
-export const saveIngredient = (data, callback) =>  {
+export const saveIngredient = (data, callback) => {
+    const url = data.id ? `/ingredients/${data.id}` : '/ingredients';
+    const method = data.id ? 'PUT' : 'POST';
+
     const config = {
-        url: data.id ? `/ingredients/${data.id}` : '/ingredients',
-        method: data.id ? 'PUT' : 'POST',
+        url,
+        method,
         data: {
             ingredient: data
         },
     };
-    axios.request(config).then(
-      response => callback(response.data)
-    );
+
+    axios.request(config).then(response => callback(response.data));
 };
 
 export const deleteIngredient = (id, callback) => {

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import * as actions from './IngredientsActions';
+import * as actions from './RecipeTypesActions';
 import {Button, Table, TableHead, TableBody, TableRow, TableCell, TextField, Paper} from "@mui/material";
 
-const Ingredient = () => {
+const RecipeType = () => {
   const [formData, setFormData] = useState({ name: "" });
   const navigate = useNavigate();
   const { id } = useParams();
@@ -11,20 +11,21 @@ const Ingredient = () => {
 
   useEffect(() => {
     if (id !== "new") {
-      actions.getIngredient(id, (ingredientData) => {
-        setFormData({ name: ingredientData.name });
+      actions.getRecipeType(id, (recipeTypeData) => {
+        setFormData({ name: recipeTypeData.name });
       });
     }
   }, [id]);
 
+
   const handleSave = () => {
     if (id === "new") {
-      actions.saveIngredient(formData, () => {
-        navigate('/ingredients');
+      actions.saveRecipeType(formData, () => {
+        navigate('/recipe_types');
       });
     } else {
-      actions.saveIngredient({ ...formData, id: id }, () => {
-        navigate('/ingredients');
+      actions.saveRecipeType({ ...formData, id: id }, () => {
+        navigate('/recipe_types');
       });
     }
   };
@@ -39,7 +40,7 @@ const Ingredient = () => {
       <Table component={Paper}>
         <TableHead>
           <TableRow>
-            <TableCell>Ingredient</TableCell>
+            <TableCell>Category</TableCell>
             <TableCell>
               <Button
                 variant="contained"
@@ -69,4 +70,4 @@ const Ingredient = () => {
   );
 };
 
-export default Ingredient;
+export default RecipeType;
