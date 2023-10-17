@@ -1,0 +1,15 @@
+# == Schema Information
+#
+# Table name: ingredients
+#
+#  id   :uuid             not null, primary key
+#  name :string           not null
+#
+
+one:
+  name: MyString
+  'null': 
+
+two:
+  name: MyString
+  'null': 

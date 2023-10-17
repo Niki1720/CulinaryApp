@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+}
+
+body {
+    font-family: "Arial", sans-serif;
+    height: 100vh;
+    width: 100vw;
+}
+
+.container {
+    height: 100vh;
+    margin: 0 auto;
+    background-color: #F5F5F5;
+
+    .list {
+        width: 90vw;
+        max-width: 90vw;
+        margin: 0 auto;
+        padding: 20px;
+    }
+}
