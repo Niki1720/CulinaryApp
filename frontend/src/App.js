@@ -8,6 +8,8 @@ import RecipeTypesPage from "./components/categories/RecipeTypesList";
 import RecipeType from "./components/categories/RecipeTypeForm";
 import TagsPage from "./components/tags/TagsList";
 import TagForm from "./components/tags/TagForm";
+import RecipePage from "./components/recipes/RecipesList";
+import RecipeForm from "./components/recipes/RecipeForm";
 
 const App = () => {
   return (
@@ -23,6 +25,8 @@ const App = () => {
             <Route path="/recipe_types/:id?" element={<RecipeType />} />
             <Route path="/tags" element={<TagsPage />} />
             <Route path="/tags/:id?" element={<TagForm />} />
+            <Route path="/recipes" element={<RecipePage />} />
+            <Route path="/recipes/:id?" element={<RecipeForm />} />
           </Routes>
           </div>
         </div>

@@ -8,4 +8,5 @@
 #  updated_at :datetime         not null
 #
 class RecipeType < ApplicationRecord
+  has_many :recipe
 end
