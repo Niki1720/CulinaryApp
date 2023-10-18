@@ -3,5 +3,6 @@ Rails.application.routes.draw do
     resources :estates, only: [:index]
     resources :ingredients
     resources :recipe_types
+    resources :tags
   end
 end

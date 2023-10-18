@@ -6,6 +6,8 @@ import './App.scss'
 import Ingredient from "./components/ingredients/IngredientForm";
 import RecipeTypesPage from "./components/categories/RecipeTypesList";
 import RecipeType from "./components/categories/RecipeTypeForm";
+import TagsPage from "./components/tags/TagsList";
+import TagForm from "./components/tags/TagForm";
 
 const App = () => {
   return (
@@ -19,8 +21,8 @@ const App = () => {
             <Route path="/ingredients/:id?" element={<Ingredient />} />
             <Route path="/recipe_types" element={<RecipeTypesPage />} />
             <Route path="/recipe_types/:id?" element={<RecipeType />} />
-            {/*<Route path="/tags" element={<TagsPage />} />*/}
-            {/*<Route path="/" element={<HomePage />} />*/}
+            <Route path="/tags" element={<TagsPage />} />
+            <Route path="/tags/:id?" element={<TagForm />} />
           </Routes>
           </div>
         </div>
