@@ -51,3 +51,12 @@ export const loadRecipeTypes = (callback) => {
         response => callback(response.data)
     );
 };
+
+export const loadIngredients = (callback) => {
+    const config = {
+        url: '/ingredients',
+    };
+    axios.request(config).then(
+        response => callback(response.data)
+    );
+};

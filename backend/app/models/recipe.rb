@@ -20,4 +20,5 @@
 #
 class Recipe < ApplicationRecord
   belongs_to :recipe_type
+  has_many :recipe_ingredients, :dependent => :delete_all
 end

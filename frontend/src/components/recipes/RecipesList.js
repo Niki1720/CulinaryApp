@@ -27,7 +27,7 @@ const RecipePage = () => {
 
   const handleRecipeDelete = (id) => {
     actions.deleteRecipe(id, () => {
-      actions.loadRecipes(setRecipes());
+      actions.loadRecipes(setRecipes);
     });
   };
 

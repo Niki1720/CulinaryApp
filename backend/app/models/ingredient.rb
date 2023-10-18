@@ -6,4 +6,5 @@
 #  name :string           not null
 #
 class Ingredient < ApplicationRecord
+  has_many :recipe_ingredients
 end
