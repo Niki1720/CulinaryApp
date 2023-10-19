@@ -1,22 +1,39 @@
 * {
-    margin: 0;
+  margin: 0;
 }
 
 body {
-    font-family: "Arial", sans-serif;
-    height: 100vh;
-    width: 100vw;
+  font-family: "Public Sans", sans-serif;
+  font-size: 20px;
+  height: 100vh;
+  width: 100vw;
 }
 
 .container {
-    height: 100vh;
-    margin: 0 auto;
-    background-color: #F5F5F5;
+  height: 100vh;
+  margin: 0 auto;
+  background-color: #F5F5F5;
 
-    .list {
-        width: 90vw;
-        max-width: 90vw;
-        margin: 0 auto;
-        padding: 20px;
-    }
+  .list {
+    width: 80vw;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .list-container {
+    height: 90vh;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+  }
+
+
+  .custom-button .MuiButton-startIcon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+  }
+
 }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_18_080741) do
+ActiveRecord::Schema.define(version: 2023_10_18_113143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,13 @@ ActiveRecord::Schema.define(version: 2023_10_18_080741) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "recipe_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "recipe_id"
+    t.uuid "tag_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "recipe_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", limit: 255, default: "", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -64,5 +71,7 @@ ActiveRecord::Schema.define(version: 2023_10_18_080741) do
 
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
+  add_foreign_key "recipe_tags", "recipes"
+  add_foreign_key "recipe_tags", "tags"
   add_foreign_key "recipes", "recipe_types"
 end

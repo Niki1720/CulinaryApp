@@ -10,33 +10,30 @@ nav {
     margin: 0 100px;
     padding: 10px;
 
-    a {
+    .recipe-link {
       text-decoration: none;
       color: inherit;
+      display: flex;
+      align-items: center;
+
+      .recipe-icon {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 28px;
+          height: 28px;
+          margin-right: 10px;
+        }
+
+        span {
+          display: inline;
+          font-size: 20px;
+        }
+      }
 
       &:hover {
         text-decoration: none;
-      }
-    }
-
-    .menu {
-      position: relative;
-      cursor: pointer;
-
-      .menu-items {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: #fff;
-        padding: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        list-style: none;
-        text-decoration: none;
-
-        &:hover {
-          display: block;
-        }
       }
     }
   }

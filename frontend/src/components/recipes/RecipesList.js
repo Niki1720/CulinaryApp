@@ -33,33 +33,49 @@ const RecipePage = () => {
 
   const columns = useMemo(() => [
     {
-      Header: 'Recipes',
+      Header: () => (
+          <div style={{ display: 'flex', alignItems: 'center', fontSize: '20px' }}>
+            <img
+                src="/recipe_icon.svg"
+                alt="Recipe Icon"
+                style={{
+                  maxWidth: '24px',
+                  maxHeight: '24px',
+                  verticalAlign: 'middle',
+                  marginRight: '8px',
+                }}
+            />
+            Recipes
+          </div>
+      ),
       accessor: 'name',
     },
     {
-      Header: () => (
-        <div style={{ textAlign: 'right' }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddRecipe}
-            startIcon={<Add />}
-          >
-            Add Recipe
-          </Button>
-        </div>
-      ),
+        Header: () => (
+            <div style={{textAlign: 'right'}}>
+                <Button
+                    variant="contained"
+                    style={{ backgroundColor: '#867DF0', borderRadius: '10px', textTransform: 'capitalize' }}
+                    onClick={handleAddRecipe}
+                    startIcon={<Add/>}
+                >
+                    Add New
+                </Button>
+            </div>
+        ),
       accessor: 'id',
-      Cell: ({ value }) => (
-        <div>
-          <Button onClick={() => handleEditRecipe(value)} startIcon={<Edit />}>
-            Edytuj
-          </Button>
-          <Button onClick={() => handleRecipeDelete(value)} startIcon={<Delete />}>
-            Usuń
-          </Button>
-        </div>
-      ),
+        Cell: ({value}) => (
+            <div style={{ textAlign: 'right', paddingRight: '20px' }}>
+                <Edit
+                    style={{ cursor: 'pointer', marginRight: '20px' }}
+                    onClick={() => handleEditRecipe(value)}
+                />
+                <Delete
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleRecipeDelete(value)}
+                />
+            </div>
+        ),
     },
   ], []);
 

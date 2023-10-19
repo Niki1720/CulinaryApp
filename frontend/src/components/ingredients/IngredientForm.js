@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import * as actions from './IngredientsActions';
 import {Button, Table, TableHead, TableBody, TableRow, TableCell, TextField, Paper} from "@mui/material";
+import '../../App.scss'
 
 const Ingredient = () => {
   const [formData, setFormData] = useState({ name: "" });
@@ -35,16 +36,29 @@ const Ingredient = () => {
   };
 
   return (
-    <div style={{width: "80%", margin: "auto"}}>
+    <div style={{width: "80%", height: '90vh', margin: "auto"}}>
       <Table component={Paper}>
         <TableHead>
           <TableRow>
-            <TableCell>Ingredient</TableCell>
-            <TableCell>
+            <TableCell style={{ fontSize: '20px' }}>
+              <img
+                  src="/recipe_icon.svg"
+                  alt="Recipe Icon"
+                  style={{
+                    maxWidth: '24px',
+                    maxHeight: '24px',
+                    verticalAlign: 'middle',
+                    marginRight: '8px'
+                  }}
+              />
+              {formData.id ? `Ingredients > ${formData.name}` :' Ingredients > New'}
+            </TableCell>
+            <TableCell style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span></span>
               <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSave}
+                  variant="contained"
+                  style={{ backgroundColor: '#867DF0', borderRadius: '10px', textTransform: 'capitalize' }}
+                  onClick={handleSave}
               >
                 Save
               </Button>
@@ -54,13 +68,17 @@ const Ingredient = () => {
         <TableBody>
           <TableRow>
             <TableCell>
-              <TextField
-                label="Name"
-                variant="outlined"
-                fullWidth
-                value={formData.name}
-                onChange={handleNameChange}
-              />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ margin: 'auto 100px', fontSize: "18px", color: '#6E7180'}}>
+                  Name
+                </div>
+                <TextField
+                    variant="outlined"
+                    fullWidth
+                    value={formData.name}
+                    onChange={handleNameChange}
+                />
+              </div>
             </TableCell>
           </TableRow>
         </TableBody>

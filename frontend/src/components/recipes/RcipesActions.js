@@ -60,3 +60,12 @@ export const loadIngredients = (callback) => {
         response => callback(response.data)
     );
 };
+
+export const loadTags = (callback) => {
+    const config = {
+        url: '/tags',
+    };
+    axios.request(config).then(
+        response => callback(response.data)
+    );
+};
