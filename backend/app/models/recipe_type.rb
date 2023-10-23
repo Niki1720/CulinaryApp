@@ -9,4 +9,7 @@
 #
 class RecipeType < ApplicationRecord
   has_many :recipe
+
+  validates :name, presence: true, length: { minimum: 3 }
+  validates :name, uniqueness: true
 end

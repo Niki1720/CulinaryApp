@@ -16,7 +16,6 @@ class RecipeTypesController < ApplicationController
 
   def update
     @recipe_type.update!(recipe_type_params)
-    render :show, status: :ok
   end
 
   def destroy

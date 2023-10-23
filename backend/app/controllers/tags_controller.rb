@@ -16,7 +16,6 @@ class TagsController < ApplicationController
 
   def update
     @tag.update!(tag_params)
-    render :show, status: :ok
   end
 
   def destroy

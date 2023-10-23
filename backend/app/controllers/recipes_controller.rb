@@ -9,20 +9,12 @@ class RecipesController < ApplicationController
   end
   def create
     @recipe = Recipe.new(recipe_params)
-
-    if @recipe.save
-      render :show, status: :created
-    else
-      render json: @recipe.errors, status: :unprocessable_entity
-    end
+    @recipe.save!
+    render :show, status: :created
   end
 
   def update
-    if @recipe.update(recipe_params)
-      render :show, status: :ok
-    else
-      render json: @recipe.errors, status: :unprocessable_entity
-    end
+    @recipe.update!(recipe_params)
   end
 
   def destroy
@@ -41,8 +33,8 @@ class RecipesController < ApplicationController
       :description,
       :preparation_time,
       :recipe_type_id,
-      recipe_tags_attributes: [:tag_id],
-      recipe_ingredients_attributes: [:ingredient_id, :amount, :unit],
+      tag_ids: [],
+      recipe_ingredients_attributes: [:id, :ingredient_id, :amount, :unit, :_destroy],
       )
   end
 end

@@ -16,7 +16,6 @@ class IngredientsController < ApplicationController
 
   def update
     @ingredient.update!(ingredient_params)
-      render :show, status: :ok
   end
 
   def destroy
@@ -29,6 +28,6 @@ class IngredientsController < ApplicationController
     end
 
     def ingredient_params
-      params.require(:ingredient).permit(:name, :null)
+      params.require(:ingredient).permit(:name)
     end
 end

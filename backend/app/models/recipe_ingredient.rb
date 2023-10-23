@@ -19,6 +19,7 @@ class RecipeIngredient < ApplicationRecord
   belongs_to :recipe
   belongs_to :ingredient
 
-  accepts_nested_attributes_for :recipe
-  accepts_nested_attributes_for :ingredient
+  validates :ingredient_id, uniqueness: { scope: :recipe_id }
+  validates :amount, presence: true
+  validates :unit, presence: true
 end

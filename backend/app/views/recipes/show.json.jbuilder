@@ -1,7 +1,15 @@
-json.extract! @recipe, :id, :name, :description, :preparation_time, :recipe_type_id
+json.extract! @recipe, :id, :name, :description, :preparation_time
 json.recipe_ingredients @recipe.recipe_ingredients do |recipe_ingredient|
-  json.extract! recipe_ingredient, :ingredient_id, :amount, :unit
+  json.extract! recipe_ingredient, :id, :amount, :unit
+  json.ingredient do
+    json.extract! recipe_ingredient.ingredient, :id, :name
+  end
 end
-json.recipe_tags @recipe.recipe_tags do |recipe_tag|
-  json.extract! recipe_tag, :tag_id
+
+json.recipe_type do
+  json.extract! @recipe.recipe_type, :id, :name
+end
+
+json.tags @recipe.tags do |tag|
+  json.extract! tag, :id, :name
 end

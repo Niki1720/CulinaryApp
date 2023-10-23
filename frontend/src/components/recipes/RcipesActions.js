@@ -26,7 +26,8 @@ export const saveRecipe = (data, callback) => {
         url,
         method,
         data: {
-            recipe: data
+            recipe: data,
+
         },
     };
 
