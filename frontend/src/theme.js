@@ -76,7 +76,7 @@ const theme = createTheme({
         marginRight: "10px",
         paddingTop: '5px'
     },
-    recipeSpan: {
+    customSpan: {
         fontFamily: 'Public Sans", sans-serif',
         weight: '400',
         fontSize: '18px',

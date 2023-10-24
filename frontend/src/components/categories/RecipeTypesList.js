@@ -5,9 +5,9 @@ import { Add } from '@mui/icons-material';
 import { useTable } from 'react-table';
 import RecipeType from "./RecipeTypeForm";
 import {useNavigate} from "react-router-dom";
-import RecipeIcon from "../RecipeIcon";
-import EditIcon from "../EditIcon";
-import DeleteIcon from "../DeleteIcon";
+import RecipeIcon from "../icons/RecipeIcon";
+import EditIcon from "../icons/EditIcon";
+import DeleteIcon from "../icons/DeleteIcon";
 import theme from "../../theme";
 
 const RecipeTypesPage = () => {

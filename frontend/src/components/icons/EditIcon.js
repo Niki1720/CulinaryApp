@@ -1,10 +1,10 @@
 import React from 'react';
 
-const DeleteIcon = ({ onClick }) => {
+const EditIcon = ({ onClick }) => {
     return (
         <img
-            src="/delete-outline.svg"
-            alt="Delete Icon"
+            src="fa-regular_edit.svg"
+            alt="Edit Icon"
             style={{
                 maxWidth: '28px',
                 maxHeight: '28px',
@@ -17,4 +17,4 @@ const DeleteIcon = ({ onClick }) => {
     );
 };
 
-export default DeleteIcon;
+export default EditIcon;

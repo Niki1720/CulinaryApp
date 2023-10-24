@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useMemo } from "react";
 import * as actions from './TagsActions';
 import { Button, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
-import { Edit, Delete, Add } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { useTable } from 'react-table';
 import {useNavigate} from "react-router-dom";
 import TagForm from "./TagForm";
-import RecipeIcon from "../RecipeIcon";
+import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
-import EditIcon from "../EditIcon";
-import DeleteIcon from "../DeleteIcon";
+import EditIcon from "../icons/EditIcon";
+import DeleteIcon from "../icons/DeleteIcon";
 
 const TagsPage = () => {
   const [tags, setTags] = useState([]);

@@ -1,14 +1,13 @@
 import React from 'react';
 
-const EditIcon = ({ onClick }) => {
+const UserIcon = ({ onClick }) => {
     return (
         <img
-            src="/fa-regular_edit.svg"
-            alt="Edit Icon"
+            src="/users.svg"
+            alt="User Icon"
             style={{
                 maxWidth: '28px',
                 maxHeight: '28px',
-                verticalAlign: 'middle',
                 marginRight: '8px',
                 cursor: 'pointer',
             }}
@@ -17,4 +16,4 @@ const EditIcon = ({ onClick }) => {
     );
 };
 
-export default EditIcon;
+export default UserIcon;

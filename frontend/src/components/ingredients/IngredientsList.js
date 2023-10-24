@@ -1,14 +1,14 @@
 import React, {useEffect, useState, useMemo} from "react";
 import * as actions from './IngredientsActions';
 import {Button, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper} from '@mui/material';
-import {Edit, Delete, Add} from '@mui/icons-material';
+import {Add} from '@mui/icons-material';
 import {useTable} from 'react-table';
 import Ingredient from "./IngredientForm";
 import {useNavigate} from "react-router-dom";
-import RecipeIcon from "../RecipeIcon";
+import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
-import EditIcon from "../EditIcon";
-import DeleteIcon from "../DeleteIcon";
+import EditIcon from "../icons/EditIcon";
+import DeleteIcon from "../icons/DeleteIcon";
 
 const IngredientsPage = () => {
     const [ingredients, setIngredients] = useState([]);

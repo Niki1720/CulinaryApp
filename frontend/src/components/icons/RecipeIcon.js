@@ -8,8 +8,9 @@ const RecipeIcon = () => {
             style={{
                 maxWidth: '28px',
                 maxHeight: '28px',
-                verticalAlign: 'middle',
-                marginRight: '8px'
+                marginRight: '8px',
+                cursor: 'pointer',
+
             }}
         />
     );

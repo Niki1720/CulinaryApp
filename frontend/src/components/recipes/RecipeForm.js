@@ -12,16 +12,15 @@ import {
     Paper,
     MenuItem,
     Select,
-    InputLabel, FormHelperText, Grid, TextareaAutosize,
+    FormHelperText, Grid, TextareaAutosize,
 } from "@mui/material";
 import IngredientModal from "./IngredientModal";
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
-import RecipeIcon from "../RecipeIcon";
+import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
-import EditIcon from "../EditIcon";
-import DeleteIcon from "../DeleteIcon";
-import tagForm from "../tags/TagForm";
+import EditIcon from "../icons/EditIcon";
+import DeleteIcon from "../icons/DeleteIcon";
 
 const RecipeForm = () => {
     const navigate = useNavigate();
@@ -247,7 +246,7 @@ const RecipeForm = () => {
                                 helperText={formik.touched.preparation_time && formik.errors.preparation_time}
                             />
                             <div>
-                                <span style={theme.recipeSpan}>min</span>
+                                <span style={theme.customSpan}>min</span>
                             </div>
                         </Grid>
                     </Grid>

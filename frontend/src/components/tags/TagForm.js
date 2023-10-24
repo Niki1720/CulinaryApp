@@ -4,7 +4,7 @@ import * as actions from './TagsActions';
 import {Button, Table, TableHead, TableBody, TableRow, TableCell, TextField, Paper} from "@mui/material";
 import {useFormik} from "formik";
 import * as Yup from 'yup';
-import RecipeIcon from "../RecipeIcon";
+import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
 
 const TagForm = () => {

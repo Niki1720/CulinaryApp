@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, {useState} from "react";
+import {Link, NavLink} from "react-router-dom";
 import './Navigation.scss';
-import RecipeIcon from "./RecipeIcon";
+import RecipeIcon from "./icons/RecipeIcon";
+import UserIcon from "./icons/UserIcon";
 
 const Navigation = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -13,12 +14,20 @@ const Navigation = () => {
     return (
         <nav>
             <div className="navbar">
-                <Link to="/recipes" className="recipe-link">
-                    <div className="recipe-icon">
-                        <RecipeIcon />
-                        <span>Recipe</span>
-                    </div>
-                </Link>
+                <div className="nav-section">
+                    <Link to="/recipes" className="nav-link">
+                        <div className="nav-icon">
+                            <RecipeIcon/>
+                            <span>Recipe</span>
+                        </div>
+                    </Link>
+                    <Link to="/users" className="nav-link">
+                        <div className="nav-icon">
+                            <UserIcon/>
+                            <span>Users</span>
+                        </div>
+                    </Link>
+                </div>
                 <div className={`menu-icon menu-trigger ${menuOpen ? 'open' : ''}`} id="menu-icon" onClick={toggleMenu}>
                     <img src="/solar_settings-outline.svg" alt="Custom Icon"/>
                     <ul id="menu-items" className={`menu-items ${menuOpen ? 'open' : ''}`}>

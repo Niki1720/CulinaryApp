@@ -2,10 +2,20 @@
 #
 # Table name: ingredients
 #
-#  id   :uuid             not null, primary key
-#  name :string           not null
+#  id      :uuid             not null, primary key
+#  name    :string           not null
+#  user_id :uuid
+#
+# Indexes
+#
+#  index_ingredients_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
 #
 class Ingredient < ApplicationRecord
+  belongs_to :user
   has_many :recipe_ingredients
   has_many :recipes, through: :recipe_ingredients
 

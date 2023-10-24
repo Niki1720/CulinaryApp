@@ -12,6 +12,8 @@ import RecipePage from "./components/recipes/RecipesList";
 import RecipeForm from "./components/recipes/RecipeForm";
 import theme from "./theme";
 import {ThemeProvider} from "@mui/styles";
+import UsersPage from "./components/users/UsersList";
+import UserForm from "./components/users/UserForm";
 
 const App = () => {
     return (
@@ -30,6 +32,8 @@ const App = () => {
                                 <Route path="/tags/:id?" element={<TagForm/>}/>
                                 <Route path="/recipes" element={<RecipePage/>}/>
                                 <Route path="/recipes/:id?" element={<RecipeForm/>}/>
+                                <Route path="/users" element={<UsersPage/>}/>
+                                <Route path="/users/:id?" element={<UserForm/>}/>
                             </Routes>
                         </div>
                     </div>

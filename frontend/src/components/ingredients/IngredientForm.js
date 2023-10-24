@@ -5,7 +5,7 @@ import {Button, Table, TableHead, TableBody, TableRow, TableCell, TextField, Pap
 import '../../App.scss'
 import {useFormik} from "formik";
 import * as Yup from 'yup';
-import RecipeIcon from "../RecipeIcon";
+import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
 
 const Ingredient = () => {
