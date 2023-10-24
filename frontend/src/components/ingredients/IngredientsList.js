@@ -5,7 +5,10 @@ import {Edit, Delete, Add} from '@mui/icons-material';
 import {useTable} from 'react-table';
 import Ingredient from "./IngredientForm";
 import {useNavigate} from "react-router-dom";
-import '../../App.scss'
+import RecipeIcon from "../RecipeIcon";
+import theme from "../../theme";
+import EditIcon from "../EditIcon";
+import DeleteIcon from "../DeleteIcon";
 
 const IngredientsPage = () => {
     const [ingredients, setIngredients] = useState([]);
@@ -34,42 +37,36 @@ const IngredientsPage = () => {
 
     const columns = useMemo(() => [{
         Header: () => (
-            <div style={{ display: 'flex', alignItems: 'center', fontSize: '20px' }}>
-                <img
-                    src="/recipe_icon.svg"
-                    alt="Recipe Icon"
-                    style={{
-                        maxWidth: '24px',
-                        maxHeight: '24px',
-                        verticalAlign: 'middle',
-                        marginRight: '8px',
-                    }}
-                />
+            <div style={theme.flexContainer}>
+                <RecipeIcon/>
                 Ingredients
             </div>
         ),
         accessor: 'name',
+        Cell: ({ value }) => (
+            <div style={theme.tableRow}>
+                {value}
+            </div>
+        ),
     },
         {
             Header: () => (
-                <div style={{textAlign: 'right'}}>
+                <div style={theme.flexButtonContainer}>
                     <Button
                         variant="contained"
-                        style={{ backgroundColor: '#867DF0', borderRadius: '10px', textTransform: 'capitalize' }}
+                        style={theme.buttonStyle}
                         onClick={handleAddIngredient}
                         startIcon={<Add/>}
                     >
-                        Add New
+                        Add new
                     </Button>
                 </div>
             ),
             accessor: 'id',
-            Cell: ({value}) => (
-                <div style={{textAlign: 'right'}}>
-                    <Button className="custom-button" onClick={() => handleEditIngredient(value)} startIcon={<Edit/>}>
-                    </Button>
-                    <Button className="custom-button" onClick={() => handleIngredientDelete(value)} startIcon={<Delete/>}>
-                    </Button>
+            Cell: ({ value }) => (
+                <div style={{textAlign: "right"}}>
+                    <EditIcon onClick={() => handleEditIngredient(value)} />
+                    <DeleteIcon onClick={() => handleIngredientDelete(value)} />
                 </div>
             ),
         },
@@ -87,39 +84,41 @@ const IngredientsPage = () => {
     });
 
     return (
-        <div className="list-container">
-            <div className="records">
-                {editingIngredientId !== null ? (
-                    <Ingredient ingredientId={editingIngredientId}/>
-                ) : null}
-                <TableContainer component={Paper}>
-                    <Table {...getTableProps()}>
-                        <TableHead>
-                            {headerGroups.map((headerGroup) => (
-                                <TableRow {...headerGroup.getHeaderGroupProps() } >
-                                    {headerGroup.headers.map((column) => (
-                                        <TableCell {...column.getHeaderProps()}>{column.render("Header") } </TableCell>
+        <div className="records">
+            {editingIngredientId !== null ? (
+                <Ingredient ingredientId={editingIngredientId}/>
+            ) : null}
+            <TableContainer component={Paper}>
+                <Table {...getTableProps()}>
+                    <TableHead>
+                        {headerGroups.map((headerGroup) => (
+                            <TableRow {...headerGroup.getHeaderGroupProps()} >
+                                {headerGroup.headers.map((column) => (
+                                    <TableCell {...column.getHeaderProps()}>{column.render("Header")} </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHead>
+                    <TableRow style={{backgroundColor: '#F5F5F5'}}>
+                        <TableCell sx={theme.tableCell}>Ingredient</TableCell>
+                        <TableCell sx={{...theme.tableCell, textAlign: 'right'}}>Options</TableCell>
+                    </TableRow>
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <TableRow {...row.getRowProps()}>
+                                    {row.cells.map((cell, cellIndex) => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render("Cell")}
+                                        </TableCell>
                                     ))}
                                 </TableRow>
-                            ))}
-                        </TableHead>
-                        <TableBody {...getTableBodyProps()}>
-                            {rows.map((row) => {
-                                prepareRow(row);
-                                return (
-                                    <TableRow {...row.getRowProps()}>
-                                        {row.cells.map((cell, cellIndex) => (
-                                            <TableCell {...cell.getCellProps()} style={{ fontSize: '16px', padding: '10px 50px' }} >
-                                                {cell.render("Cell")}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </div>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     );
 };

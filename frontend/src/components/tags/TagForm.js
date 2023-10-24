@@ -4,6 +4,8 @@ import * as actions from './TagsActions';
 import {Button, Table, TableHead, TableBody, TableRow, TableCell, TextField, Paper} from "@mui/material";
 import {useFormik} from "formik";
 import * as Yup from 'yup';
+import RecipeIcon from "../RecipeIcon";
+import theme from "../../theme";
 
 const TagForm = () => {
   const [existingTags, setExistingTags] = useState([])
@@ -51,28 +53,21 @@ const TagForm = () => {
   })
 
   return (
-    <div style={{width: "80%", margin: "auto"}}>
+      <div style={{margin: "auto"}}>
       <Table component={Paper}>
         <TableHead>
           <TableRow>
-            <TableCell style={{ fontSize: '20px' }}>
-              <img
-                  src="/recipe_icon.svg"
-                  alt="Recipe Icon"
-                  style={{
-                    maxWidth: '24px',
-                    maxHeight: '24px',
-                    verticalAlign: 'middle',
-                    marginRight: '8px'
-                  }}
-              />
-              Tag > {id === "new" ? "New" : formik.values.name}
+            <TableCell style={theme.tableCell}>
+              <div style={theme.flexContainer}>
+                <RecipeIcon />
+                Tag > {id === "new" ? "New" : formik.values.name}
+              </div>
             </TableCell>
-            <TableCell style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <TableCell style={theme.flexButtonContainer}>
               <span></span>
               <Button
                   variant="contained"
-                  style={{ backgroundColor: '#867DF0', borderRadius: '10px', textTransform: 'capitalize' }}
+                  style={theme.buttonStyle}
                   onClick={formik.handleSubmit}
               >
                 Save
@@ -84,7 +79,7 @@ const TagForm = () => {
           <TableRow>
             <TableCell>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ margin: 'auto 100px', fontSize: "18px", color: '#6E7180'}}>
+                <div style={theme.tableRow}>
                   Name
                 </div>
                 <TextField

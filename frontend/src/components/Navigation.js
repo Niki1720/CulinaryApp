@@ -1,36 +1,41 @@
-import React from "react";
-import {Link, NavLink} from "react-router-dom";
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import './Navigation.scss';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGear} from "@fortawesome/free-solid-svg-icons";
+import RecipeIcon from "./RecipeIcon";
 
 const Navigation = () => {
-  return (
-      <nav>
-        <div className="navbar">
-          <Link to="/recipes" className="recipe-link">
-            <div className="recipe-icon">
-              <img src="recipe_icon.svg" alt="Recipe Icon" />
-              <span>Recipe</span>
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
+
+    return (
+        <nav>
+            <div className="navbar">
+                <Link to="/recipes" className="recipe-link">
+                    <div className="recipe-icon">
+                        <RecipeIcon />
+                        <span>Recipe</span>
+                    </div>
+                </Link>
+                <div className={`menu-icon menu-trigger ${menuOpen ? 'open' : ''}`} id="menu-icon" onClick={toggleMenu}>
+                    <img src="/solar_settings-outline.svg" alt="Custom Icon"/>
+                    <ul id="menu-items" className={`menu-items ${menuOpen ? 'open' : ''}`}>
+                        <li>
+                            <NavLink to="/ingredients" onClick={toggleMenu}>Ingredients</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/recipe_types" onClick={toggleMenu}>Categories</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/tags" onClick={toggleMenu}>Tags</NavLink>
+                        </li>
+                    </ul>
+                </div>
             </div>
-          </Link>
-            <div className="menu-icon menu-trigger" id="menu-icon">
-                {/*<FontAwesomeIcon icon={faGear} />*/}
-                <ul id="menu-items" className="menu-items">
-                    <li>
-                        <NavLink to="/ingredients">Ingredients</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/recipe_types">Categories</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/tags">Tags</NavLink>
-                    </li>
-                </ul>
-            </div>
-        </div>
-      </nav>
-  );
+        </nav>
+    );
 };
 
 export default Navigation;

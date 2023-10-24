@@ -5,6 +5,10 @@ import { Edit, Delete, Add } from '@mui/icons-material';
 import { useTable } from 'react-table';
 import {useNavigate} from "react-router-dom";
 import TagForm from "./TagForm";
+import RecipeIcon from "../RecipeIcon";
+import theme from "../../theme";
+import EditIcon from "../EditIcon";
+import DeleteIcon from "../DeleteIcon";
 
 const TagsPage = () => {
   const [tags, setTags] = useState([]);
@@ -33,32 +37,38 @@ const TagsPage = () => {
 
   const columns = useMemo(() => [
     {
-      Header: 'Tags',
+      Header: () => (
+          <div style={theme.flexContainer}>
+            <RecipeIcon />
+            Tags
+          </div>
+      ),
       accessor: 'name',
+      Cell: ({ value }) => (
+          <div style={theme.tableRow}>
+            {value}
+          </div>
+      ),
     },
     {
       Header: () => (
-        <div style={{ textAlign: 'right' }}>
+          <div style={theme.flexButtonContainer}>
           <Button
             variant="contained"
-            color="primary"
+            style={theme.buttonStyle}
             onClick={handleAddTag}
             startIcon={<Add />}
           >
-            Add Tag
+            Add new
           </Button>
         </div>
       ),
       accessor: 'id',
       Cell: ({ value }) => (
-        <div>
-          <Button onClick={() => handleEditTag(value)} startIcon={<Edit />}>
-            Edytuj
-          </Button>
-          <Button onClick={() => handleTagDelete(value)} startIcon={<Delete />}>
-            Usuń
-          </Button>
-        </div>
+          <div style={{textAlign: "right"}}>
+            <EditIcon onClick={() => handleEditTag(value)} />
+            <DeleteIcon onClick={() => handleTagDelete(value)} />
+          </div>
       ),
     },
   ], []);
@@ -90,6 +100,10 @@ const TagsPage = () => {
               </TableRow>
             ))}
           </TableHead>
+          <TableRow style={{ backgroundColor: '#F5F5F5' }}>
+            <TableCell sx={theme.tableCell}>Tag</TableCell>
+            <TableCell sx={{ ...theme.tableCell, textAlign: 'right' }}>Options</TableCell>
+          </TableRow>
           <TableBody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);

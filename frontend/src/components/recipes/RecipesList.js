@@ -5,6 +5,10 @@ import { Edit, Delete, Add } from '@mui/icons-material';
 import { useTable } from 'react-table';
 import {useNavigate} from "react-router-dom";
 import RecipeForm from "./RecipeForm";
+import RecipeIcon from "../RecipeIcon";
+import theme from "../../theme";
+import EditIcon from "../EditIcon";
+import DeleteIcon from "../DeleteIcon";
 
 const RecipePage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -34,46 +38,36 @@ const RecipePage = () => {
   const columns = useMemo(() => [
     {
       Header: () => (
-          <div style={{ display: 'flex', alignItems: 'center', fontSize: '20px' }}>
-            <img
-                src="/recipe_icon.svg"
-                alt="Recipe Icon"
-                style={{
-                  maxWidth: '24px',
-                  maxHeight: '24px',
-                  verticalAlign: 'middle',
-                  marginRight: '8px',
-                }}
-            />
-            Recipes
+          <div style={theme.flexContainer}>
+              <RecipeIcon />
+              Recipes
           </div>
       ),
-      accessor: 'name',
+        accessor: 'name',
+        Cell: ({ value }) => (
+            <div style={theme.tableRow}>
+                {value}
+            </div>
+        ),
     },
     {
         Header: () => (
-            <div style={{textAlign: 'right'}}>
+            <div style={theme.flexButtonContainer}>
                 <Button
                     variant="contained"
-                    style={{ backgroundColor: '#867DF0', borderRadius: '10px', textTransform: 'capitalize' }}
+                    style={theme.buttonStyle}
                     onClick={handleAddRecipe}
                     startIcon={<Add/>}
                 >
-                    Add New
+                    Add new
                 </Button>
             </div>
         ),
       accessor: 'id',
-        Cell: ({value}) => (
-            <div style={{ textAlign: 'right', paddingRight: '20px' }}>
-                <Edit
-                    style={{ cursor: 'pointer', marginRight: '20px' }}
-                    onClick={() => handleEditRecipe(value)}
-                />
-                <Delete
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleRecipeDelete(value)}
-                />
+        Cell: ({ value }) => (
+            <div style={{textAlign: "right"}}>
+                <EditIcon onClick={() => handleEditRecipe(value)} />
+                <DeleteIcon onClick={() => handleRecipeDelete(value)} />
             </div>
         ),
     },
@@ -106,6 +100,10 @@ const RecipePage = () => {
               </TableRow>
             ))}
           </TableHead>
+            <TableRow style={{ backgroundColor: '#F5F5F5' }}>
+                <TableCell sx={theme.tableCell}>Recipe</TableCell>
+                <TableCell sx={{ ...theme.tableCell, textAlign: 'right' }}>Options</TableCell>
+            </TableRow>
           <TableBody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
