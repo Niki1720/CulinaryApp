@@ -28,7 +28,7 @@ const UserForm = () => {
             actions.getUser(id, (userData) => {
                 formik.setValues({
                     email: userData.email,
-                    encrypted_password: userData.encrypted_password,
+                    password: userData.password,
                     admin: userData.admin
                 })
             });
@@ -38,7 +38,7 @@ const UserForm = () => {
     const formik = useFormik({
         initialValues: {
             email: "",
-            encrypted_password: '',
+            password: '',
             admin: false
         },
         validationSchema: Yup.object({
@@ -47,7 +47,7 @@ const UserForm = () => {
                 .email('Invalid email format')
                 .min(6, 'Email is too short')
                 .max(30, 'Email is too long'),
-            encrypted_password: Yup.string().required('Password is required'),
+            password: Yup.string().required('Password is required'),
         }),
         onSubmit: (values) => {
             if (id === "new") {
@@ -128,13 +128,13 @@ const UserForm = () => {
                                 <TextField
                                     variant="outlined"
                                     fullWidth
-                                    name="encrypted_password"
+                                    name="password"
                                     type="password"
-                                    value={formik.values.encrypted_password}
+                                    value={formik.values.password}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    error={formik.touched.encrypted_password && Boolean(formik.errors.encrypted_password)}
-                                    helperText={formik.touched.encrypted_password && formik.errors.encrypted_password}
+                                    error={formik.touched.password && Boolean(formik.errors.password)}
+                                    helperText={formik.touched.password && formik.errors.password}
                                 />
                             </Grid>
                         </Grid>

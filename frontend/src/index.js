@@ -5,8 +5,11 @@ import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 import {client} from 'scrumship-client';
 
+const token = localStorage.getItem('token');
 axios.defaults.baseURL = 'http://localhost:4000/api';
 client.log('lXruWYU');
+axios.defaults.headers['Accept'] = 'application/json';
+axios.defaults.headers['Authorization'] = token;
 
 ReactDOM.render(
     <React.StrictMode>

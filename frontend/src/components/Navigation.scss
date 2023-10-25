@@ -29,6 +29,30 @@
     position: relative;
   }
 
+  .nav-button {
+    width: 135px;
+    background-color: #867DF0;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+  }
+
+  .nav-button:hover {
+    background-color: #cc3366;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05)
+  }
+
+  .nav-buttons-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-buttons-container > * {
+    margin: 0 20px;
+  }
+
   .menu-items {
     display: none;
     flex-direction: column;

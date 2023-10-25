@@ -5,5 +5,6 @@ Rails.application.routes.draw do
     resources :tags
     resources :recipes
     resources :users
+    devise_for :users
   end
 end
