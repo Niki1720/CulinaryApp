@@ -33,4 +33,8 @@ class User < ApplicationRecord
 
   validates :email, presence: true, length: { minimum: 6, maximum: 30 }, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :encrypted_password, presence: true
+
+  def admin?
+    admin
+  end
 end

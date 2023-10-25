@@ -1,17 +1,14 @@
 class TagsController < ApplicationController
-  before_action :set_tag, only: %w[ show update destroy ]
+  load_and_authorize_resource
 
   def index
-    @tags = Tag.all
   end
 
   def show
   end
 
   def create
-    @tag = Tag.new(tag_params)
     @tag.save!
-    render :show, status: :created
   end
 
   def update
@@ -23,10 +20,6 @@ class TagsController < ApplicationController
   end
 
   private
-
-  def set_tag
-    @tag = Tag.find(params[:id])
-  end
 
   def tag_params
     params.require(:tag).permit(:name)

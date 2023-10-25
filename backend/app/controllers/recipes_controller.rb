@@ -1,16 +1,14 @@
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: %w[show update destroy]
+  load_and_authorize_resource
 
   def index
-    @recipes = Recipe.all
   end
 
   def show
   end
+
   def create
-    @recipe = Recipe.new(recipe_params)
     @recipe.save!
-    render :show, status: :created
   end
 
   def update
@@ -23,10 +21,6 @@ class RecipesController < ApplicationController
 
   private
 
-  def set_recipe
-    @recipe = Recipe.find(params[:id])
-  end
-
   def recipe_params
     params.require(:recipe).permit(
       :name,
@@ -35,6 +29,6 @@ class RecipesController < ApplicationController
       :recipe_type_id,
       tag_ids: [],
       recipe_ingredients_attributes: [:id, :ingredient_id, :amount, :unit, :_destroy],
-      )
+    )
   end
 end
