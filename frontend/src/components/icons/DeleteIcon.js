@@ -3,7 +3,7 @@ import React from 'react';
 const DeleteIcon = ({ onClick }) => {
     return (
         <img
-            src="delete-outline.svg"
+            src="/delete-outline.svg"
             alt="Delete Icon"
             style={{
                 maxWidth: '28px',

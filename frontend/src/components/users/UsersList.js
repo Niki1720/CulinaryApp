@@ -9,15 +9,32 @@ import {useTable} from "react-table";
 import {useNavigate} from "react-router-dom";
 import UserForm from "./UserForm";
 import UserIcon from "../icons/UserIcon";
+import ErrorsMessage from "../ErrorsMessage";
 
 const UsersPage = () => {
     const [users, setUsers] = useState([])
     const [editUserId, setEditUserId] = useState(null);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    const hideError = () => {
+        setError(null);
+    };
+
     useEffect(() => {
-        actions.loadUsers(setUsers);
-    }, [])
+        actions.loadUsers((data, error) => {
+            if (error) {
+                if (error.response && error.response.status === 403) {
+                    setError("Nie masz uprawnień do tej zakładki.");
+                } else {
+                    setError("Wystąpił nieznany błąd.");
+                }
+                setTimeout(hideError, 5000);
+            } else {
+                setUsers(data);
+            }
+        });
+    }, []);
 
     const handleEditUser = (id) => {
         setEditUserId(id);
@@ -30,8 +47,17 @@ const UsersPage = () => {
     };
 
     const handleUserDelete = (id) => {
-        actions.deleteUser(id, () => {
-            actions.loadUsers(setUsers);
+        actions.deleteUser(id, (data, error) => {
+            if (error) {
+                if (error.response && error.response.status === 403) {
+                    setError("Nie masz uprawnień do tej akcji.");
+                } else {
+                    setError("Wystąpił nieznany błąd.");
+                }
+                setTimeout(hideError, 5000);
+            } else {
+                actions.loadUsers(setUsers);
+            }
         });
     };
 
@@ -47,6 +73,14 @@ const UsersPage = () => {
             Cell: ({ value }) => (
                 <div style={theme.tableRow}>
                     {value}
+                </div>
+            ),
+        },
+        {
+            accessor: 'admin',
+            Cell: ({ value }) => (
+                <div style={theme.tableRow}>
+                    {value ? 'Yes' : 'No'}
                 </div>
             ),
         },
@@ -86,6 +120,9 @@ const UsersPage = () => {
 
     return (
         <div className="records">
+            {error && (
+                <ErrorsMessage message={error} />
+            )}
             {editUserId !== null ? (
                 <UserForm userId={editUserId} />
             ) : null}
@@ -102,6 +139,7 @@ const UsersPage = () => {
                     </TableHead>
                     <TableRow style={{ backgroundColor: '#F5F5F5' }}>
                         <TableCell sx={theme.tableCell}>User</TableCell>
+                        <TableCell sx={theme.tableCell}>Admin</TableCell>
                         <TableCell sx={{ ...theme.tableCell, textAlign: 'right' }}>Options</TableCell>
                     </TableRow>
                     <TableBody {...getTableBodyProps()}>

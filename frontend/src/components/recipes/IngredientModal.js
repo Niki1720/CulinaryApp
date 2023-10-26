@@ -6,6 +6,7 @@ import './IngredientModal.scss';
 import { FormHelperText, MenuItem, Select } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import theme from "../../theme";
 
 const IngredientModal = ({
                              open,

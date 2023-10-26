@@ -6,12 +6,18 @@ import {useFormik} from "formik";
 import * as Yup from 'yup';
 import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
+import ErrorsMessage from "../ErrorsMessage";
 
 const RecipeType = () => {
   const [existingRecipeTypes, setExistingRecipeTypes] = useState([]);
+  const [error, setError] = useState(null)
+  const [initialRecipeTypeName, setInitialRecipeTypeName] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const hideError = () => {
+    setError(null);
+  };
 
   useEffect(() => {
     actions.loadRecipeTypes((data) => {
@@ -23,6 +29,7 @@ const RecipeType = () => {
         formik.setValues({
           name: recipeTypeData.name
         })
+        setInitialRecipeTypeName(recipeTypeData.name)
       });
     }
   }, [id]);
@@ -41,12 +48,32 @@ const RecipeType = () => {
     }),
     onSubmit: (values) => {
       if (id === "new") {
-        actions.saveRecipeType(values, () => {
-          navigate('/recipe_types');
+        actions.saveRecipeType(values, (data, error) => {
+          if (error) {
+            if (error.response && error.response.status === 403) {
+              setError("Nie masz uprawnień do tej operacji.");
+            } else {
+              setError("Wystąpił nieznany błąd podczas zapisywania kategorii.");
+            }
+            setTimeout(hideError, 5000);
+          } else {
+            setError(null);
+            navigate('/recipe_types');
+          }
         });
       } else {
-        actions.saveRecipeType({ ...values, id: id }, () => {
-          navigate('/recipe_types');
+        actions.saveRecipeType({ ...values, id: id }, (data, error) => {
+          if (error) {
+            if (error.response && error.response.status === 403) {
+              setError("Nie masz uprawnień do tej operacji.");
+            } else {
+              setError("Wystąpił nieznany błąd podczas aktualizacji kategorii.");
+            }
+            setTimeout(hideError, 5000);
+          } else {
+            setError(null);
+            navigate('/recipe_types');
+          }
         });
       }
     }
@@ -54,13 +81,16 @@ const RecipeType = () => {
 
   return (
     <div style={{margin: "auto"}}>
+      {error && (
+          <ErrorsMessage message={error} />
+      )}
       <Table component={Paper}>
         <TableHead>
           <TableRow>
             <TableCell style={theme.tableCell}>
               <div style={theme.flexContainer}>
                 <RecipeIcon/>
-                Category > {id === "new" ? "New" : formik.values.name}
+                Category > {id === "new" ? "New" : initialRecipeTypeName}
               </div>
             </TableCell>
             <TableCell style={theme.flexButtonContainer}>

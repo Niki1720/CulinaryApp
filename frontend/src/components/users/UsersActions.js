@@ -5,8 +5,10 @@ export const loadUsers = (callback) => {
         url: '/users',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 }
 
 export const getUser = (id, callback) => {
@@ -14,8 +16,10 @@ export const getUser = (id, callback) => {
         url: `/users/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const saveUser = (data, callback) => {
@@ -29,8 +33,11 @@ export const saveUser = (data, callback) => {
             user: data
         },
     };
-
-    axios.request(config).then(response => callback(response.data));
+    axios.request(config).then(
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const deleteUser = (id, callback) => {
@@ -39,6 +46,8 @@ export const deleteUser = (id, callback) => {
         url: `/users/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };

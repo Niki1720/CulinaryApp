@@ -20,5 +20,5 @@ class Ingredient < ApplicationRecord
   has_many :recipes, through: :recipe_ingredients
 
   validates :name, presence: true, length: { minimum: 3 }
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { scope: :user_id }
 end

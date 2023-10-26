@@ -5,8 +5,10 @@ export const loadRecipeTypes = (callback) => {
         url: '/recipe_types',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const getRecipeType = (id, callback) => {
@@ -14,8 +16,10 @@ export const getRecipeType = (id, callback) => {
         url: `/recipe_types/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const saveRecipeType = (data, callback) =>  {
@@ -27,8 +31,10 @@ export const saveRecipeType = (data, callback) =>  {
         },
     };
     axios.request(config).then(
-      response => callback(response.data)
-    );
+      response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const deleteRecipeType = (id, callback) => {
@@ -37,6 +43,8 @@ export const deleteRecipeType = (id, callback) => {
         url: `/recipe_types/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };

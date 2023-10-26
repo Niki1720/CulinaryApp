@@ -1,6 +1,6 @@
 .add-ingredient-modal {
   width: 50vh;
-  height: 40vh;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -17,6 +17,12 @@
     background-color: #867DF0 ;
     border-radius: 5px;
     text-transform: capitalize;
+    transition: all 0.3s;
+  }
+
+  .form-button:hover {
+    background-color: #867DF0 ;
+    transform: scale(1.05)
   }
 
   .input-label{

@@ -5,8 +5,10 @@ export const loadIngredients = (callback) => {
         url: '/ingredients',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const getIngredient = (id, callback) => {
@@ -14,8 +16,10 @@ export const getIngredient = (id, callback) => {
         url: `/ingredients/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const saveIngredient = (data, callback) => {
@@ -29,8 +33,11 @@ export const saveIngredient = (data, callback) => {
             ingredient: data
         },
     };
-
-    axios.request(config).then(response => callback(response.data));
+    axios.request(config).then(
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const deleteIngredient = (id, callback) => {
@@ -39,6 +46,8 @@ export const deleteIngredient = (id, callback) => {
         url: `/ingredients/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });;
 };

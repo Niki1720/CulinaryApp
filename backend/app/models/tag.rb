@@ -22,5 +22,5 @@ class Tag < ApplicationRecord
   has_many :recipes, through: :recipe_tags
 
   validates :name, presence: true, length: { minimum: 2 }
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { scope: :user_id }
 end

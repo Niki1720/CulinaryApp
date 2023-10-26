@@ -3,7 +3,7 @@ import React from 'react';
 const EditIcon = ({ onClick }) => {
     return (
         <img
-            src="fa-regular_edit.svg"
+            src="/fa-regular_edit.svg"
             alt="Edit Icon"
             style={{
                 maxWidth: '28px',

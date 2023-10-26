@@ -9,14 +9,31 @@ import RecipeIcon from "../icons/RecipeIcon";
 import EditIcon from "../icons/EditIcon";
 import DeleteIcon from "../icons/DeleteIcon";
 import theme from "../../theme";
+import ErrorsMessage from "../ErrorsMessage";
 
 const RecipeTypesPage = () => {
   const [recipeType, setRecipeType] = useState([]);
   const [editingRecipeTypeId, setEditingRecipeTypeId] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const hideError = () => {
+    setError(null);
+  };
+
   useEffect(() => {
-    actions.loadRecipeTypes(setRecipeType);
+    actions.loadRecipeTypes((data, error) => {
+      if (error) {
+        if (error.response && error.response.status === 403) {
+          setError("Nie masz uprawnień do tej zakładki.");
+        } else {
+          setError("Wystąpił nieznany błąd.");
+        }
+        setTimeout(hideError, 5000);
+      } else {
+        setRecipeType(data);
+      }
+    });
   }, []);
 
   const handleEditRecipeType = (id) => {
@@ -30,8 +47,17 @@ const RecipeTypesPage = () => {
   };
 
   const handleRecipeTypeDelete = (id) => {
-    actions.deleteRecipeType(id, () => {
-      actions.loadRecipeTypes(setRecipeType);
+    actions.deleteRecipeType(id, (data, error) => {
+      if (error) {
+        if (error.response && error.response.status === 403) {
+          setError("Nie masz uprawnień do tej akcji.");
+        } else {
+          setError("Wystąpił nieznany błąd.");
+        }
+        setTimeout(hideError, 5000);
+      } else {
+        actions.loadRecipeTypes(setRecipeType());
+      }
     });
   };
 
@@ -86,6 +112,9 @@ const RecipeTypesPage = () => {
 
   return (
     <div className="records">
+      {error && (
+          <ErrorsMessage message={error} />
+      )}
       {editingRecipeTypeId !== null ? (
         <RecipeType recipeTypeId={editingRecipeTypeId} />
       ) : null}

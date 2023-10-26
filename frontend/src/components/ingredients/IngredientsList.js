@@ -9,14 +9,31 @@ import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
 import EditIcon from "../icons/EditIcon";
 import DeleteIcon from "../icons/DeleteIcon";
+import ErrorsMessage from "../ErrorsMessage";
 
 const IngredientsPage = () => {
     const [ingredients, setIngredients] = useState([]);
     const [editingIngredientId, setEditingIngredientId] = useState(null);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    const hideError = () => {
+        setError(null);
+    };
+
     useEffect(() => {
-        actions.loadIngredients(setIngredients);
+        actions.loadIngredients((data, error) => {
+            if (error) {
+                if (error.response && error.response.status === 403) {
+                    setError("Nie masz uprawnień do tej zakładki.");
+                } else {
+                    setError("Wystąpił nieznany błąd.");
+                }
+                setTimeout(hideError, 5000);
+            } else {
+                setIngredients(data);
+            }
+        });
     }, []);
 
     const handleEditIngredient = (id) => {
@@ -30,8 +47,17 @@ const IngredientsPage = () => {
     };
 
     const handleIngredientDelete = (id) => {
-        actions.deleteIngredient(id, () => {
-            actions.loadIngredients(setIngredients);
+        actions.deleteIngredient(id, (data, error) => {
+            if (error) {
+                if (error.response && error.response.status === 403) {
+                    setError("Nie masz uprawnień do tej akcji.");
+                } else {
+                    setError("Wystąpił nieznany błąd.");
+                }
+                setTimeout(hideError, 5000);
+            } else {
+                actions.loadIngredients(setIngredients());
+            }
         });
     };
 
@@ -85,6 +111,9 @@ const IngredientsPage = () => {
 
     return (
         <div className="records">
+            {error && (
+                <ErrorsMessage message={error} />
+            )}
             {editingIngredientId !== null ? (
                 <Ingredient ingredientId={editingIngredientId}/>
             ) : null}

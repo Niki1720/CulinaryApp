@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import * as actions from './UsersActions';
 import {
@@ -17,11 +17,17 @@ import {useFormik} from "formik";
 import * as Yup from 'yup';
 import theme from "../../theme";
 import UserIcon from "../icons/UserIcon";
+import ErrorsMessage from "../ErrorsMessage";
 
 const UserForm = () => {
+    const [error, setError] = useState(null)
+    const [initialUserEmail, setInitialUserEmail] = useState("");
     const navigate = useNavigate();
     const {id} = useParams();
 
+    const hideError = () => {
+        setError(null);
+    };
 
     useEffect(() => {
         if (id !== "new") {
@@ -31,6 +37,7 @@ const UserForm = () => {
                     password: userData.password,
                     admin: userData.admin
                 })
+                setInitialUserEmail(userData.email)
             });
         }
     }, [id]);
@@ -51,12 +58,32 @@ const UserForm = () => {
         }),
         onSubmit: (values) => {
             if (id === "new") {
-                actions.saveUser(values, () => {
-                    navigate('/users');
+                actions.saveUser(values, (data, error) => {
+                    if (error) {
+                        if (error.response && error.response.status === 403) {
+                            setError("Nie masz uprawnień do tej operacji.");
+                        } else {
+                            setError("Wystąpił nieznany błąd podczas zapisywania użytkownika.");
+                        }
+                        setTimeout(hideError, 5000);
+                    } else {
+                        setError(null);
+                        navigate('/users');
+                    }
                 });
             } else {
-                actions.saveUser({...values, id: id}, () => {
-                    navigate('/users');
+                actions.saveUser({ ...values, id: id }, (data, error) => {
+                    if (error) {
+                        if (error.response && error.response.status === 403) {
+                            setError("Nie masz uprawnień do tej operacji.");
+                        } else {
+                            setError("Wystąpił nieznany błąd podczas aktualizacji użytkownika.");
+                        }
+                        setTimeout(hideError, 5000);
+                    } else {
+                        setError(null);
+                        navigate('/users');
+                    }
                 });
             }
         },
@@ -64,13 +91,16 @@ const UserForm = () => {
 
     return (
         <div style={{margin: "auto"}}>
+            {error && (
+                <ErrorsMessage message={error} />
+            )}
             <Table component={Paper}>
                 <TableHead>
                     <TableRow>
                         <TableCell style={theme.tableCell}>
                             <div style={theme.flexContainer}>
                                 <UserIcon/>
-                                User > {id === "new" ? "New" : formik.values.email}
+                                User > {id === "new" ? "New" : initialUserEmail}
                             </div>
                         </TableCell>
                         <TableCell style={theme.flexButtonContainer}>

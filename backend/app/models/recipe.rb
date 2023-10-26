@@ -31,6 +31,7 @@ class Recipe < ApplicationRecord
   accepts_nested_attributes_for :recipe_ingredients, allow_destroy: true
 
   validates :name, presence: true, length: { minimum: 5 }
+  validates :name, uniqueness: { scope: :user_id }
   validates :description, presence: true, length: { in: 15..500 }
   validates :preparation_time, presence: true
   validates :recipe_type, presence: true

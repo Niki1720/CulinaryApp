@@ -9,14 +9,31 @@ import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
 import EditIcon from "../icons/EditIcon";
 import DeleteIcon from "../icons/DeleteIcon";
+import ErrorsMessage from "../ErrorsMessage";
 
 const TagsPage = () => {
   const [tags, setTags] = useState([]);
   const [editTagId, setEditTagId] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const hideError = () => {
+    setError(null);
+  };
+
   useEffect(() => {
-    actions.loadTags(setTags);
+    actions.loadTags((data, error) => {
+      if (error) {
+        if (error.response && error.response.status === 403) {
+          setError("Nie masz uprawnień do tej zakładki.");
+        } else {
+          setError("Wystąpił nieznany błąd.");
+        }
+        setTimeout(hideError, 5000);
+      } else {
+        setTags(data);
+      }
+    });
   }, []);
 
   const handleEditTag = (id) => {
@@ -30,8 +47,17 @@ const TagsPage = () => {
   };
 
   const handleTagDelete = (id) => {
-    actions.deleteTag(id, () => {
-      actions.loadTags(setTags);
+    actions.deleteTag(id, (data, error) => {
+      if (error) {
+        if (error.response && error.response.status === 403) {
+          setError("Nie masz uprawnień do tej akcji.");
+        } else {
+          setError("Wystąpił nieznany błąd.");
+        }
+        setTimeout(hideError, 5000);
+      } else {
+        actions.loadTags(setTags());
+      }
     });
   };
 
@@ -86,6 +112,9 @@ const TagsPage = () => {
 
   return (
     <div className="records">
+      {error && (
+          <ErrorsMessage message={error} />
+      )}
       {editTagId !== null ? (
         <TagForm tagId={editTagId} />
       ) : null}

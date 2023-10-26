@@ -5,8 +5,10 @@ export const loadRecipes = (callback) => {
         url: '/recipes',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const getRecipe = (id, callback) => {
@@ -14,8 +16,10 @@ export const getRecipe = (id, callback) => {
         url: `/recipes/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const saveRecipe = (data, callback) => {
@@ -30,8 +34,11 @@ export const saveRecipe = (data, callback) => {
 
         },
     };
-
-    axios.request(config).then(response => callback(response.data));
+    axios.request(config).then(
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const deleteRecipe = (id, callback) => {
@@ -40,8 +47,10 @@ export const deleteRecipe = (id, callback) => {
         url: `/recipes/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const loadRecipeTypes = (callback) => {
@@ -49,8 +58,10 @@ export const loadRecipeTypes = (callback) => {
         url: '/recipe_types',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const loadIngredients = (callback) => {
@@ -58,8 +69,10 @@ export const loadIngredients = (callback) => {
         url: '/ingredients',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const loadTags = (callback) => {
@@ -67,6 +80,8 @@ export const loadTags = (callback) => {
         url: '/tags',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };

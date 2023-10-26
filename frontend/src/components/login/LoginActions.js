@@ -10,9 +10,13 @@ export const login = (data, callback) => {
     }
     axios.request(config)
         .then(response => {
-            callback(response.data, response.headers.authorization);
+            callback(response.data, response.headers.authorization, null);
             window.location.reload();
-        })
+        }).catch(error => {
+        callback(null, null, error
+        );
+    });
+
 }
 
 export const logout = () => {

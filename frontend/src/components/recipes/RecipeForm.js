@@ -17,21 +17,33 @@ import {
 import IngredientModal from "./IngredientModal";
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
-import RecipeIcon from "../icons/RecipeIcon";
 import theme from "../../theme";
-import EditIcon from "../icons/EditIcon";
+import RecipeIcon from "../icons/RecipeIcon";
 import DeleteIcon from "../icons/DeleteIcon";
+import EditIcon from "../icons/EditIcon";
+import ErrorsMessage from "../ErrorsMessage";
 
 const RecipeForm = () => {
-    const navigate = useNavigate();
+    const [error, setError] = useState(null)
+    const [existingRecipes, setExistingRecipes] = useState([]);
+    const [initialRecipeName, setInitialRecipeName] = useState("");
     const [recipeTypes, setRecipeTypes] = useState([])
     const [availableIngredients, setAvailableIngredients] = useState([]);
     const [availableTags, setAvailableTags] = useState([]);
     const [isAddIngredientModalOpen, setAddIngredientModalOpen] = useState(false);
     const [editingIngredient, setEditingIngredient] = useState(null);
     const {id} = useParams();
+    const navigate = useNavigate();
+
+    const hideError = () => {
+        setError(null);
+    };
 
     useEffect(() => {
+        actions.loadRecipes((recipes) => {
+            setExistingRecipes(recipes);
+        });
+
         actions.loadRecipeTypes((types) => {
             setRecipeTypes(types);
         });
@@ -54,6 +66,7 @@ const RecipeForm = () => {
                     recipe_tags: recipeData.tags.map(tag => tag.id),
                     recipe_ingredients: recipeData.recipe_ingredients
                 });
+                setInitialRecipeName(recipeData.name)
             });
         }
     }, [id]);
@@ -70,7 +83,10 @@ const RecipeForm = () => {
         validationSchema: Yup.object({
             name: Yup.string()
                 .required('Name is required')
-                .min(5, 'Name must be at least 5 characters'),
+                .min(5, 'Name must be at least 5 characters')
+                .test('is-unique', 'This name is already taken', (value) => {
+                return !existingRecipes.some((recipe) => recipe.name === value);
+            }),
             description: Yup.string()
                 .required('Description is required')
                 .min(15, 'Description must be at least 15 characters')
@@ -97,16 +113,33 @@ const RecipeForm = () => {
                 tag_ids: values.recipe_tags
             };
             if (id === "new") {
-                actions.saveRecipe(dataToSend, () => {
-                    navigate('/recipes');
+                actions.saveRecipe(dataToSend, (data, error) => {
+                    if (error) {
+                        if (error.response && error.response.status === 403) {
+                            setError("Nie masz uprawnień do tej operacji.");
+                        } else {
+                            setError("Wystąpił nieznany błąd podczas zapisywania przepisu.");
+                        }
+                        setTimeout(hideError, 5000);
+                    } else {
+                        setError(null);
+                        navigate('/recipes');
+                    }
                 });
             } else {
                 actions.saveRecipe(
-                    {
-                        id: id, ...dataToSend,
-                    },
-                    () => {
-                        navigate('/recipes');
+                    {id: id, ...dataToSend}, (data, error) => {
+                        if (error) {
+                            if (error.response && error.response.status === 403) {
+                                setError("Nie masz uprawnień do tej operacji.");
+                            } else {
+                                setError("Wystąpił nieznany błąd podczas aktualizacji przepisu.");
+                            }
+                            setTimeout(hideError, 5000);
+                        } else {
+                            setError(null);
+                            navigate('/recipes');
+                        }
                     }
                 );
             }
@@ -164,12 +197,15 @@ const RecipeForm = () => {
 
     return (
         <Table component={Paper}>
+            {error && (
+                <ErrorsMessage message={error} />
+            )}
             <TableHead>
                 <TableRow>
                     <TableCell style={{...theme.tableCell, width: '100%'}}>
                         <div style={theme.flexContainer}>
                             <RecipeIcon/>
-                            Recipe > {id === "new" ? "New" : formik.values.name}
+                            Recipe > {id === "new" ? "New" : initialRecipeName}
                         </div>
                     </TableCell>
                     <TableCell style={theme.tableCell}>

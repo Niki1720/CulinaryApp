@@ -5,8 +5,10 @@ export const loadTags = (callback) => {
         url: '/tags',
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const getTag = (id, callback) => {
@@ -14,8 +16,10 @@ export const getTag = (id, callback) => {
         url: `/tags/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const saveTag = (data, callback) => {
@@ -29,8 +33,11 @@ export const saveTag = (data, callback) => {
             tag: data
         },
     };
-
-    axios.request(config).then(response => callback(response.data));
+    axios.request(config).then(
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
 
 export const deleteTag = (id, callback) => {
@@ -39,6 +46,8 @@ export const deleteTag = (id, callback) => {
         url: `/tags/${id}`,
     };
     axios.request(config).then(
-        response => callback(response.data)
-    );
+        response => callback(response.data, null)
+    ).catch(error => {
+        callback(null, error);
+    });
 };
