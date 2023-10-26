@@ -4,105 +4,106 @@ require 'test_helper'
 RSpec.describe IngredientsController, type: :request do
   include_examples "basic_seed"
 
-  let(:user) { User.find_by(email: 'magda.gesler@gmail.pl') }
-  let(:another_user) { User.find_by(email: 'pizza.men@domino.com') }
-  let(:admin) { User.find_by(email: 'admin@wp.pl') }
-
   context 'when user is authorizations' do
-    let(:ingredient) { Ingredient.create(name: "Pomarańcza", user:) }
-
-    it 'returns a success response with the user ingredients that belong to him' do
-      ingredient = Ingredient.create(name: "Śliwka", user:)
-      ingredient_2 = Ingredient.create(name: "Banan", user: another_user)
-
-      get "/api/ingredients", headers: auth_as(another_user)
+    it 'it shows the domino ingredients list' do
+      get "/api/ingredients", headers: auth_as(domino)
 
       response_data = JSON.parse(response.body)
+      ingredients_names = response_data.map { |ingredient| ingredient['name'] }
 
-      expect(response).to have_http_status(:ok)
-      expect(response_data.length).to eq 1
-      expect(response_data).to_not include(ingredient)
-      expect(response_data.first['id']).to eq(ingredient_2.id)
-      expect(response_data.first['name']).to eq(ingredient_2.name)
+      expect(ingredients_names).to eq(["Mleko", "Mąka"])
+
+      get "/api/ingredients", headers: auth_as(domino)
+
+      response_data = JSON.parse(response.body)
+      ingredients_names = response_data.map { |ingredient| ingredient['name'] }
+
+      expect(ingredients_names).to_not eq("Pomarańcza")
     end
 
-    it 'returns a success response for showing an existing ingredient' do
-      get "/api/ingredients/#{ingredient.id}", headers: auth_as(user)
+    it 'it shows the ingredient for domino' do
+      get "/api/ingredients/#{domino_ingredient.id}", headers: auth_as(domino)
 
-      expect(response).to have_http_status(:ok)
+      response_data = JSON.parse(response.body)
+      expect(response_data['name']).to eq("Mleko")
     end
 
-    it 'returns a forbidden status when trying to show an ingredient belonging to another user' do
-      get "/api/ingredients/#{ingredient.id}", headers: auth_as(another_user)
+    it 'it does not show the ingredient that belongs to domino' do
+      get "/api/ingredients/#{domino_ingredient.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a no content response when successfully creating a new ingredient' do
+    it 'allows domino to create a new ingredient' do
       params = {
         ingredient: {
           name: "Banan"
         }
       }
-      post "/api/ingredients", params:, headers: auth_as(user)
+      post "/api/ingredients", params:, headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a no content response when successfully updating an existing ingredient' do
+    it 'allows domino to update an existing ingredient' do
       params = {
         ingredient: {
-          name: "New Name"
+          name: "Masło"
         }
       }
-      put "/api/ingredients/#{ingredient.id}", params:, headers: auth_as(user)
+      put "/api/ingredients/#{domino_ingredient.id}", params:, headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a forbidden status when trying to update an ingredient belonging to another user' do
+    it 'does not allow to update the ingredient that belongs to domino' do
       params = {
         ingredient: {
-          name: "New Name"
+          name: "Masło"
         }
       }
-      put "/api/ingredients/#{ingredient.id}", params:, headers: auth_as(another_user)
+      put "/api/ingredients/#{domino_ingredient.id}", params:, headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a no content response when successfully destroying an existing ingredient' do
-      delete "/api/ingredients/#{ingredient.id}", headers: auth_as(user)
+    it 'allows domino to delete the ingredient' do
+      delete "/api/ingredients/#{domino_ingredient_2.id}", headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
+
+      get "/api/ingredients", headers: auth_as(domino)
+
+      response_data = JSON.parse(response.body)
+      ingredients_names = response_data.map { |ingredient| ingredient['name'] }
+
+      expect(ingredients_names).to eq(["Mleko"])
     end
 
-    it 'returns a forbidden status when trying to destroy an ingredient belonging to another user' do
-      delete "/api/ingredients/#{ingredient.id}", headers: auth_as(another_user)
+    it 'does not allot to destroy the ingredient that belongs to domino' do
+      delete "/api/ingredients/#{domino_ingredient.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
   end
 
   context 'when user is admin' do
-    let(:ingredient) { Ingredient.create(name: "Pomarańcza", user:) }
-
-    it 'returns a forbidden status when attempting to access the index' do
+    it 'does not show the admin a list of ingredients' do
       get "/api/ingredients", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to access the show action' do
-      get "/api/ingredients/#{ingredient.id}", headers: auth_as(admin)
+    it 'does not show the ingredient to the admin' do
+      get "/api/ingredients/#{domino_ingredient.id}", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to create a new ingredient' do
+    it 'does not allow the admin to create a ingredient' do
       params = {
         ingredient: {
-          name: "Banan"
+          name: "Masło"
         }
       }
       post "/api/ingredients", params:, headers: auth_as(admin)
@@ -110,19 +111,19 @@ RSpec.describe IngredientsController, type: :request do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to update an existing ingredient' do
+    it 'does not allow the admin to update the ingredient' do
       params = {
         ingredient: {
-          name: "New Name"
+          name: "Naleśniki"
         }
       }
-      put "/api/ingredients/#{ingredient.id}", params:, headers: auth_as(admin)
+      put "/api/ingredients/#{domino_ingredient.id}", params:, headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to destroy an existing ingredient' do
-      delete "/api/ingredients/#{ingredient.id}", headers: auth_as(admin)
+    it 'does not allow the admin to delete the ingredient' do
+      delete "/api/ingredients/#{domino_ingredient.id}", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end

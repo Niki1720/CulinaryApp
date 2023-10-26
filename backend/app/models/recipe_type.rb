@@ -17,7 +17,7 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class RecipeType < ApplicationRecord
-  has_many :recipe
+  has_many :recipe, dependent: :destroy
   belongs_to :user
 
   validates :name, presence: true, length: { minimum: 3 }

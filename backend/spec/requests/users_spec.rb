@@ -4,33 +4,25 @@ require 'test_helper'
 RSpec.describe UsersController, type: :request do
   include_examples "basic_seed"
 
-  let(:user) { User.find_by(email: 'magda.gesler@gmail.pl') }
-  let(:another_user) { User.find_by(email: 'pizza.men@domino.com') }
-  let(:admin) { User.find_by(email: 'admin@wp.pl') }
-
   context 'when user is authorizations' do
-    it 'returns a success response with the users list' do
+    it 'it shows the users list' do
       get "/api/users", headers: auth_as(admin)
 
       response_data = JSON.parse(response.body)
 
-      expect(response).to have_http_status(:ok)
+      users_emails = response_data.map { |email| email['email'] }
       expect(response_data.length).to eq 3
-      expect(response_data.first['id']).to eq(user.id)
-      expect(response_data.first['email']).to eq(user.email)
-      expect(response_data.second['id']).to eq(another_user.id)
-      expect(response_data.second['email']).to eq(another_user.email)
-      expect(response_data.last['id']).to eq(admin.id)
-      expect(response_data.last['email']).to eq(admin.email)
+      expect(users_emails).to include("magda.gesler@gmail.pl", "pizza.men@domino.com", "admin@wp.pl")
     end
 
-    it 'returns a success response for showing an existing user' do
-      get "/api/users/#{user.id}", headers: auth_as(admin)
+    it 'it shows the user data' do
+      get "/api/users/#{madzia.id}", headers: auth_as(admin)
 
-      expect(response).to have_http_status(:ok)
+      response_data = JSON.parse(response.body)
+      expect(response_data['email']).to eq("magda.gesler@gmail.pl")
     end
 
-    it 'returns a no content response when successfully creating a new user' do
+    it 'allows admin to create a new user' do
       params = {
         user: {
           email: "paula@wp.pl",
@@ -42,64 +34,69 @@ RSpec.describe UsersController, type: :request do
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a no content response when successfully updating an existing user' do
+    it 'allows admin to update an existing user' do
       params = {
         user: {
           email: "paula@wp.pl",
           password: "password"
         }
       }
-      put "/api/users/#{user.id}", params:, headers: auth_as(admin)
+      put "/api/users/#{madzia.id}", params:, headers: auth_as(admin)
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a no content response when successfully destroying an existing user' do
-      delete "/api/users/#{user.id}", headers: auth_as(admin)
+    it 'allows amin to delete the user' do
+      delete "/api/users/#{madzia.id}", headers: auth_as(admin)
 
       expect(response).to have_http_status(:no_content)
+
+      get "/api/users", headers: auth_as(admin)
+
+      response_data = JSON.parse(response.body)
+      users_emails = response_data.map { |email| email['email'] }
+
+      expect(users_emails).to eq(["pizza.men@domino.com", "admin@wp.pl"])
     end
   end
 
   context 'when user is not admin' do
-    let(:user) { User.find_by(email: 'pizza.men@domino.com') }
-
-    it 'returns a forbidden status when attempting to access the index' do
-      get "/api/users", headers: auth_as(user)
+    it 'does not show the madzia a list of users' do
+      get "/api/users", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to access the show action' do
-      get "/api/users/#{another_user.id}", headers: auth_as(user)
+    it 'does not show the user to the madzia' do
+      get "/api/users/#{admin.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to create a new user' do
+    it 'does not allow the madzia to create a user' do
       params = {
         user: {
           email: "paula@wp.pl"
         }
       }
-      post "/api/users", params:, headers: auth_as(user)
+      post "/api/users", params:, headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to update an existing user' do
+    it 'does not allow the madzia to update the user' do
       params = {
         user: {
           email: "paula@wp.pl"
         }
       }
-      put "/api/users/#{another_user.id}", params:, headers: auth_as(user)
+      put "/api/users/#{admin.id}", params:, headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to destroy an existing user' do
-      delete "/api/users/#{another_user.id}", headers: auth_as(user)
+    it 'does not allow the madzia to delete the user' do
+      delete "/api/users/#{admin.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end

@@ -4,105 +4,108 @@ require 'test_helper'
 RSpec.describe RecipeTypesController, type: :request do
   include_examples "basic_seed"
 
-  let(:user) { User.find_by(email: 'magda.gesler@gmail.pl') }
-  let(:another_user) { User.find_by(email: 'pizza.men@domino.com') }
-  let(:admin) { User.find_by(email: 'admin@wp.pl') }
-
   context 'when user is authorizations' do
     let(:category) { RecipeType.create(name: "Obiad", user:) }
 
-    it 'returns a success response with the user categories that belong to him' do
-      category = RecipeType.create(name: "Kolacja", user:)
-      category_2 = RecipeType.create(name: "Obiad", user: another_user)
-
-      get "/api/recipe_types", headers: auth_as(another_user)
+    it 'it shows the domino categories list' do
+      get "/api/recipe_types", headers: auth_as(domino)
 
       response_data = JSON.parse(response.body)
+      categories_names = response_data.map { |category| category['name'] }
 
-      expect(response).to have_http_status(:ok)
-      expect(response_data.length).to eq 1
-      expect(response_data).to_not include(category)
-      expect(response_data.first['id']).to eq(category_2.id)
-      expect(response_data.first['name']).to eq(category_2.name)
+      expect(categories_names).to eq(["Kolacja"])
+
+      get "/api/recipe_types", headers: auth_as(madzia)
+
+      response_data = JSON.parse(response.body)
+      categories_names = response_data.map { |category| category['name'] }
+
+      expect(categories_names).to eq(["Obiad"])
     end
 
-    it 'returns a success response for showing an existing category' do
-      get "/api/recipe_types/#{category.id}", headers: auth_as(user)
+    it 'it shows a category for domino' do
+      get "/api/recipe_types/#{domino_category.id}", headers: auth_as(domino)
 
-      expect(response).to have_http_status(:ok)
+      response_data = JSON.parse(response.body)
+      expect(response_data['name']).to eq("Kolacja")
     end
 
-    it 'returns a forbidden status when trying to show a category belonging to another user' do
-      get "/api/recipe_types/#{category.id}", headers: auth_as(another_user)
+    it 'it does not show the category that belongs to domino' do
+      get "/api/recipe_types/#{domino_category.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a no content response when successfully creating a new category' do
+    it 'allows domino to create a new category' do
       params = {
         recipe_type: {
-          name: "Banan"
+          name: "Podwieczorek"
         }
       }
-      post "/api/recipe_types", params:, headers: auth_as(user)
+      post "/api/recipe_types", params:, headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a no content response when successfully updating an existing category' do
+    it 'allows domino to update an existing category' do
       params = {
         recipe_type: {
-          name: "New Name"
+          name: "Obiad"
         }
       }
-      put "/api/recipe_types/#{category.id}", params:, headers: auth_as(user)
+      put "/api/recipe_types/#{domino_category.id}", params:, headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a forbidden status when trying to update a category belonging to another user' do
+    it 'does not allow to update the category that belongs to domino' do
       params = {
         recipe_type: {
-          name: "New Name"
+          name: "Podwieczorek"
         }
       }
-      put "/api/recipe_types/#{category.id}", params:, headers: auth_as(another_user)
+      put "/api/recipe_types/#{domino_category.id}", params:, headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a no content response when successfully destroying an existing category' do
-      delete "/api/recipe_types/#{category.id}", headers: auth_as(user)
+    it 'allows domino to delete the category' do
+      delete "/api/recipe_types/#{domino_category.id}", headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
+
+      get "/api/recipe_types", headers: auth_as(domino)
+
+      response_data = JSON.parse(response.body)
+      categories_names = response_data.map { |category| category['name'] }
+
+      expect(categories_names).to eq([])
     end
 
-    it 'returns a forbidden status when trying to destroy a category belonging to another user' do
-      delete "/api/recipe_types/#{category.id}", headers: auth_as(another_user)
+    it 'does not allot to destroy the category that belongs to domino' do
+      delete "/api/recipe_types/#{domino_category.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
   end
 
   context 'when user is admin' do
-    let(:category) { RecipeType.create(name: "Type", user:) }
-
-    it 'returns a forbidden status when attempting to access the index' do
+    it 'does not show the admin a list of categories' do
       get "/api/recipe_types", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to access the show action' do
-      get "/api/recipe_types/#{category.id}", headers: auth_as(admin)
+    it 'does not show the category to the admin' do
+      get "/api/recipe_types/#{domino_category.id}", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to create a new category' do
+    it 'does not allow the admin to create a category' do
       params = {
         recipe_type: {
-          name: "Obiad"
+          name: "Kolacja"
         }
       }
       post "/api/recipe_types", params:, headers: auth_as(admin)
@@ -110,19 +113,19 @@ RSpec.describe RecipeTypesController, type: :request do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to update an existing category' do
+    it 'does not allow the admin to update the category' do
       params = {
         recipe_type: {
-          name: "New Name"
+          name: "Kolacja"
         }
       }
-      put "/api/recipe_types/#{category.id}", params:, headers: auth_as(admin)
+      put "/api/recipe_types/#{domino_category.id}", params:, headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to destroy an existing category' do
-      delete "/api/recipe_types/#{category.id}", headers: auth_as(admin)
+    it 'does not allow the admin to delete the category' do
+      delete "/api/recipe_types/#{domino_category.id}", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end

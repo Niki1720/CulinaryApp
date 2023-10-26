@@ -26,10 +26,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :jwt_authenticatable,
          jwt_revocation_strategy: self
 
-  has_many :recipes
-  has_many :tags
-  has_many :ingredients
-  has_many :recipe_types
+  has_many :recipes, dependent: :destroy
+  has_many :tags, dependent: :destroy
+  has_many :ingredients, dependent: :destroy
+  has_many :recipe_types, dependent: :destroy
 
   validates :email, presence: true, length: { minimum: 6, maximum: 30 }, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :encrypted_password, presence: true

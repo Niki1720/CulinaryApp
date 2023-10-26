@@ -4,105 +4,108 @@ require 'test_helper'
 RSpec.describe TagsController, type: :request do
   include_examples "basic_seed"
 
-  let(:user) { User.find_by(email: 'magda.gesler@gmail.pl') }
-  let(:another_user) { User.find_by(email: 'pizza.men@domino.com') }
-  let(:admin) { User.find_by(email: 'admin@wp.pl') }
-
   context 'when user is authorizations' do
     let(:tag) { Tag.create(name: "Tag", user:) }
 
-    it 'returns a success response with the user tags that belong to him' do
-      tag = Tag.create(name: "Tag", user:)
-      tag_2 = Tag.create(name: "Tag2", user: another_user)
-
-      get "/api/tags", headers: auth_as(another_user)
+    it 'it shows the domino tags list' do
+      get "/api/tags", headers: auth_as(domino)
 
       response_data = JSON.parse(response.body)
+      tags_names = response_data.map { |tag| tag['name'] }
 
-      expect(response).to have_http_status(:ok)
-      expect(response_data.length).to eq 1
-      expect(response_data).to_not include(tag)
-      expect(response_data.first['id']).to eq(tag_2.id)
-      expect(response_data.first['name']).to eq(tag_2.name)
+      expect(tags_names).to eq(["Z mięsem", "Nabiał"])
+
+      get "/api/tags", headers: auth_as(madzia)
+
+      response_data = JSON.parse(response.body)
+      tags_names = response_data.map { |tag| tag['name'] }
+
+      expect(tags_names).to eq(["Wegetariańskie"])
     end
 
-    it 'returns a success response for showing an existing tag' do
-      get "/api/tags/#{tag.id}", headers: auth_as(user)
+    it 'it shows the tag for domino' do
+      get "/api/tags/#{domino_tag_2.id}", headers: auth_as(domino)
 
-      expect(response).to have_http_status(:ok)
+      response_data = JSON.parse(response.body)
+      expect(response_data['name']).to eq("Nabiał")
     end
 
-    it 'returns a forbidden status when trying to show a tag belonging to another user' do
-      get "/api/tags/#{tag.id}", headers: auth_as(another_user)
+    it 'it does not show the tag that belongs to domino' do
+      get "/api/tags/#{domino_tag_2.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a no content response when successfully creating a new tag' do
+    it 'allows domino to create a new tag' do
       params = {
         tag: {
-          name: "Tag 3"
+          name: "Banan"
         }
       }
-      post "/api/tags", params:, headers: auth_as(user)
+      post "/api/tags", params:, headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a no content response when successfully updating an existing tag' do
+    it 'allows domino to update an existing tag' do
       params = {
         tag: {
-          name: "New Name"
+          name: "Wegańskie"
         }
       }
-      put "/api/tags/#{tag.id}", params:, headers: auth_as(user)
+      put "/api/tags/#{domino_tag.id}", params:, headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns a forbidden status when trying to update a tag belonging to another user' do
+    it 'does not allow to update the tag that belongs to domino' do
       params = {
         tag: {
-          name: "New Name"
+          name: "Wegańskie"
         }
       }
-      put "/api/tags/#{tag.id}", params:, headers: auth_as(another_user)
+      put "/api/tags/#{domino_tag.id}", params:, headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a no content response when successfully destroying an existing tag' do
-      delete "/api/tags/#{tag.id}", headers: auth_as(user)
+    it 'allows domino to delete the tag' do
+      delete "/api/tags/#{domino_tag.id}", headers: auth_as(domino)
 
       expect(response).to have_http_status(:no_content)
+
+      get "/api/tags", headers: auth_as(domino)
+
+      response_data = JSON.parse(response.body)
+      tags_names = response_data.map { |tag| tag['name'] }
+
+      expect(tags_names).to eq(["Nabiał"])
     end
 
-    it 'returns a forbidden status when trying to destroy a tag belonging to another user' do
-      delete "/api/tags/#{tag.id}", headers: auth_as(another_user)
+    it 'does not allot to destroy the tag that belongs to domino' do
+      delete "/api/tags/#{domino_tag.id}", headers: auth_as(madzia)
 
       expect(response).to have_http_status(:forbidden)
     end
   end
 
   context 'when user is admin' do
-    let(:tag) { Tag.create(name: "Tag", user:) }
-
-    it 'returns a forbidden status when attempting to access the index' do
+    it 'does not show the admin a list of tags' do
       get "/api/tags", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to access the show action' do
-      get "/api/tags/#{tag.id}", headers: auth_as(admin)
+    it 'does not show the tag to the admin' do
+      get "/api/tags/#{domino_tag.id}", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to create a new tag' do
+    it 'does not allow the admin to create a tag' do
       params = {
         tag: {
-          name: "Tag"
+          name: "Masło"
         }
       }
       post "/api/tags", params:, headers: auth_as(admin)
@@ -110,19 +113,19 @@ RSpec.describe TagsController, type: :request do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to update an existing tag' do
+    it 'does not allow the admin to update the tag' do
       params = {
         tag: {
-          name: "New tag"
+          name: "Naleśniki"
         }
       }
-      put "/api/tags/#{tag.id}", params:, headers: auth_as(admin)
+      put "/api/tags/#{domino_tag.id}", params:, headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'returns a forbidden status when attempting to destroy an existing tag' do
-      delete "/api/tags/#{tag.id}", headers: auth_as(admin)
+    it 'does not allow the admin to delete the tag' do
+      delete "/api/tags/#{domino_tag.id}", headers: auth_as(admin)
 
       expect(response).to have_http_status(:forbidden)
     end
