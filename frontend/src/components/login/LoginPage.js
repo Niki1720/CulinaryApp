@@ -5,45 +5,59 @@ import * as actions from './LoginActions';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ErrorsMessage from "../ErrorsMessage";
+import {useFormik} from "formik";
+import * as Yup from "yup";
 
 const LoginPage = () => {
-    const [credentials, setCredentials] = useState({ email: "", password: "" });
-    const [errorMessage, setErrorMessage] = useState("");
+    const [error, setError] = useState(null)
     const navigate = useNavigate();
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setCredentials({ ...credentials, [name]: value });
+    const hideError = () => {
+        setError(null);
     };
 
-    const handleLogin = () => {
-        actions.login(credentials, (data, token, error) => {
-            if (token) {
-                localStorage.setItem('token', token)
-                axios.defaults.headers.common['Authorization'] = token;
-                localStorage.setItem('isAdmin', data.admin ? 'true' : 'false');
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .required('Email is required')
+                .email('Invalid email format')
+                .min(6, 'Email is too short')
+                .max(30, 'Email is too long'),
+            password: Yup.string()
+                .required('Password is required'),
+        }),
+        onSubmit: (values) => {
+            actions.login(values, (data, token, error) => {
+                if (token) {
+                    localStorage.setItem('token', token)
+                    axios.defaults.headers.common['Authorization'] = token;
+                    localStorage.setItem('isAdmin', data.admin ? 'true' : 'false');
 
-                const redirectToPath = data.admin ? "/users" : "/recipes";
-                navigate(redirectToPath);
-            } else if (error) {
-                setErrorMessage('Nieprawidłowe dane logowania. Spróbuj ponownie.');
-                setCredentials({ email: "", password: "" });
-                setTimeout(() => {
-                    setErrorMessage(null);
-                }, 5000);
-            } else {
-                setErrorMessage('Wystąpił błąd podczas logowania. Spróbuj ponownie później.');
-            }
-        });
-    };
+                    const redirectToPath = data.admin ? "/users" : "/recipes";
+                    navigate(redirectToPath);
+                } else if (error.response.status === 401) {
+                    setError('Nieprawidłowe dane logowania. Spróbuj ponownie.');
+                    formik.resetForm();
+                    setTimeout(hideError, 5000);
+                } else {
+                    setError('Wystąpił błąd podczas logowania. Spróbuj ponownie później.');
+                    setTimeout(hideError, 5000);
+                }
+            });
+        },
+    });
 
     return (
         <div className="login-container">
             <Grid container justifyContent="center" alignItems="center" style={{ height: "100vh" }}>
-                <form className="form-sign-in">
+                <form className="form-sign-in" onSubmit={formik.handleSubmit}>
                     <h2 className="form-sign-in-heading">Please sign in</h2>
-                    {errorMessage && (
-                        <ErrorsMessage message={errorMessage} />
+                    {error && (
+                        <ErrorsMessage message={error} />
                     )}
                     <FormGroup controlId="email">
                         <TextField
@@ -53,8 +67,10 @@ const LoginPage = () => {
                             fullWidth
                             variant="outlined"
                             margin="normal"
-                            value={credentials.email}
-                            onChange={handleChange}
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            error={formik.touched.email && Boolean(formik.errors.email)}
+                            helperText={formik.touched.email && formik.errors.email}
                         />
                     </FormGroup>
                     <FormGroup controlId="password">
@@ -65,12 +81,14 @@ const LoginPage = () => {
                             fullWidth
                             variant="outlined"
                             margin="normal"
-                            value={credentials.password}
-                            onChange={handleChange}
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            error={formik.touched.password && Boolean(formik.errors.password)}
+                            helperText={formik.touched.password && formik.errors.password}
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Button className="sign-in-button" onClick={handleLogin} fullWidth>
+                        <Button className="sign-in-button" type="submit" fullWidth>
                             Sign in
                         </Button>
                     </FormGroup>
