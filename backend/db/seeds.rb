@@ -5,7 +5,6 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Estate.create!(name: 'Test',
-               address: 'Test Address',
-               city: 'Krakow',
-               state: 'Malopolska', zip: '30-199', latitude: 45, longitude: 32)
+User.create!(email: 'test@wp.pl',
+             password: '123456',
+             admin: true,)
